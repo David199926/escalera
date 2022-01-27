@@ -8,6 +8,6 @@ export default class Dice {
     roll() {
         let result = Math.ceil(1 + Math.random() * 5);
         console.log("Dado arroja " + result)
-        return 14;
+        return result;
     }
 }

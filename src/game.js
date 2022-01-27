@@ -44,7 +44,7 @@ async function init() {
 async function loop() {
 
     while (true) {
-        prompt("Tirar el dado? (>)");
+        await prompt("Tirar el dado? (>)");
 
         const isOver = board.playTurn();
         if (isOver) {

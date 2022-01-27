@@ -17,12 +17,17 @@ export default class Board {
     }
 
     putSnakes() {
-        this.snakes.push(new Snake(14, 3))
-        this.snakes.push(new Snake(2, 3))
+        this.snakes.push(new Snake(24, 16))
+        this.snakes.push(new Snake(22, 20))
+        this.snakes.push(new Snake(19, 8))
+        this.snakes.push(new Snake(14, 4))
     }
 
     putStairs() {
+        this.stairs.push(new Stair(10, 12))
         this.stairs.push(new Stair(3, 11))
+        this.stairs.push(new Stair(9, 18))
+        this.stairs.push(new Stair(6, 17))
     }
 
     playTurn() {
