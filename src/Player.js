@@ -19,4 +19,13 @@ export default class Player {
         console.log("Posicion actual " + this.position)
     }
 
+    /**
+     * Moves player to certain position
+     * @param {number} position 
+     */
+    moveTo(position) {
+        this.position = position;
+        console.log("Posicion actual " + this.position)
+    }
+
 }

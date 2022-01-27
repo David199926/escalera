@@ -38,10 +38,14 @@ async function loop() {
 
     while (true) {
         const input = await rl.question("Tirar el dado? (>)");
-        const isOver = board.playTurn();
 
         // exit game validation
-        if (input === "q" || isOver) {
+        if (input === "q") {
+            console.log("Gracias por jugar");
+            break;
+        }
+        const isOver = board.playTurn();
+        if (isOver) {
             console.log("Gracias por jugar");
             break;
         }
