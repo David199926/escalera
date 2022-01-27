@@ -9,17 +9,24 @@ const rl = readline.createInterface({
 
 const board = new Board();
 
+async function prompt(message) {
+    const input = await rl.question(message);
+    if (input === "q") {
+        console.log("Gracias por jugar");
+        process.exit();
+    }
+}
 
 async function gameInstructions() {
-    await rl.question("Bienvenido al juego de la escalera! (Presiona cualquier tecla >)");
-    await rl.question("Es muy sencillo jugar, lo único que tienes que hacer es tirar el dado y moverte por el tablero (>)");
-    await rl.question("La meta es llegar a la casilla 25, si lo haces, ganarás (>)");
-    await rl.question("Al tirar el dado, obtendrás un número aleatorio del 1 al 6 que indicará cuantas casillas avanzas (>)");
-    await rl.question("Si caes en la parte inferior de una escalera, subes por ella (>)");
-    await rl.question("Si caes en la cabeza de una serpiente, bajas hasta su cola :// (>)");
-    await rl.question("Si quieres retirarte dl juego, presiona la letra \"q\"");
-    await rl.question("Eso es todo lo que necesitas saber, ahora, a jugar!");
-    rl.close()
+    await prompt("Bienvenido al juego de la escalera! (Presiona cualquier tecla >)");
+    await prompt("Es muy sencillo jugar, lo único que tienes que hacer es tirar el dado y moverte por el tablero (>)");
+    await prompt("La meta es llegar a la casilla 25, si lo haces, ganarás (>)");
+    await prompt("Al tirar el dado, obtendrás un número aleatorio del 1 al 6 que indicará cuantas casillas avanzas (>)");
+    await prompt("Si caes en la parte inferior de una escalera, subes por ella (>)");
+    await prompt("Si caes en la cabeza de una serpiente, bajas hasta su cola :// (>)");
+    await prompt("Si quieres retirarte del juego, presiona la letra \"q\"");
+    await prompt("Eso es todo lo que necesitas saber, ahora, a jugar!");
+    //rl.close()
     console.log("************************************************************************")
 }
 
@@ -37,13 +44,8 @@ async function init() {
 async function loop() {
 
     while (true) {
-        const input = await rl.question("Tirar el dado? (>)");
+        prompt("Tirar el dado? (>)");
 
-        // exit game validation
-        if (input === "q") {
-            console.log("Gracias por jugar");
-            break;
-        }
         const isOver = board.playTurn();
         if (isOver) {
             console.log("Gracias por jugar");
@@ -53,8 +55,6 @@ async function loop() {
     rl.close()
 }
 
-
-
-//await init();
+await init();
 loop();
 
