@@ -145,7 +145,7 @@ async function boardConfig() {
  */
 async function init() {
     // first, instructions
-    //await gameInstructions();
+    await gameInstructions();
     await boardConfig();
 }
 
@@ -153,10 +153,12 @@ async function init() {
  * Game loop
  */
 async function loop() {
+    console.log("-------------------------------------------");
     while (true) {
         for (const player of players) {
             await prompt(`${player.name} tira los dados (>)`);
             const isOver = board.playTurn(player);
+            console.log("-------------------------------------------");
             if (isOver) {
                 console.log("Gracias por jugar");
                 rl.close();
