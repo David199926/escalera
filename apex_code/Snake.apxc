@@ -1,0 +1,24 @@
+public class Snake {
+    public Integer head;
+    public Integer tail;
+    
+    public Snake(Integer head, Integer tail) {
+        if (tail <= 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La serpiente debe terminar en una casilla con número positivo');
+            throw e;
+        }
+        if (head <= 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La serpiente debe iniciar en una casilla con número positivo');
+            throw e;
+        }
+        if (tail >= head) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La cabeza de la serpiente debe estar en una casilla superior a la cola');
+            throw e;
+        }
+        this.head = head;
+        this.tail = tail;
+    }
+}

@@ -1,0 +1,24 @@
+public class Stair {
+	public Integer start;
+    public Integer finish;
+    
+    public Stair(Integer start, Integer finish) {
+        if (start <= 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La escalera debe iniciar en una casilla con número positivo');
+            throw e;
+        }
+        if (finish <= 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La escalera debe terminar en una casilla con número positivo');
+            throw e;
+        }
+        if (finish <= start) {
+            CalloutException e = new CalloutException();
+            e.setMessage('El inicio de la escalera debe estar en una casilla inferior al final');
+            throw e;
+        }
+        this.start = start;
+        this.finish = finish;
+    }
+}

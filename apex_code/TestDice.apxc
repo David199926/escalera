@@ -1,0 +1,14 @@
+@isTest
+public class TestDice {
+    
+    /**
+     * dice result when rolled should be between 1 and 6
+     */
+    @isTest
+    static void resultIsBetweenRange() {
+        Dice dice = new Dice();
+        Integer result = dice.roll();
+        Boolean inRange = result >= 1 && result <= 6;
+        system.assert(inRange, 'Dice result outside [1,6] range');
+    }
+}

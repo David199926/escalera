@@ -1,0 +1,78 @@
+@isTest
+public class TestPlayer {
+	/**
+     * checks you can create a player
+     */
+    @isTest
+    static void canCreatePlayer() {
+        Integer maxPosition = 50;
+        String name = 'Robert';
+    
+        Player player = new Player(maxPosition, name);
+        Boolean properlyCreated = player.maxPosition == maxPosition
+            && player.name == name;
+        system.assert(properlyCreated, 'Attributes were not properly set');
+    }
+    
+    /**
+     * checks player starts at 0 position
+     */
+    @isTest
+    static void playerStartAt0() {
+        Player player = new Player(50, 'Robert');
+        system.assert(player.position == 0, 'Player doesnt start at 0 position');
+    }
+    
+    /**
+     * checks player moves properly
+     */
+    @isTest
+    static void playerMoves() {
+        Player player = new Player(50, 'Robert');
+        Integer initialPosition = player.position;
+        Integer steps = 6;
+        player.move(6);
+        system.assert(player.position == initialPosition + steps, 'Player is not moving properly');
+    }
+    
+    /**
+     * checks player moves to position properly
+     */
+    @isTest
+    static void playerMovesToPosition() {
+        Player player = new Player(50, 'Robert');
+        Integer position = 16;
+        player.moveTo(position);
+        system.assert(player.position == position, 'Player is not moving to fixed position properly');
+    }
+    
+    /**
+     * checks player moves to a positive position
+     */
+    @isTest
+    static void playerMovesToPositivePosition() {
+        Player player = new Player(50, 'Robert');
+        Boolean exceptionOccured = false;
+        try {
+            player.moveTo(-6);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to move player to 0 or negative position');        
+    }
+    
+    /**
+     * checks player moves to position lower or equals to player max position
+     */
+    @isTest
+    static void playerCantPassMaxPosition() {
+        Player player = new Player(50, 'Robert');
+        Boolean exceptionOccured = false;
+        try {
+            player.moveTo(51);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to move player beyond its max position');        
+    }
+}

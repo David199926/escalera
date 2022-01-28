@@ -1,0 +1,59 @@
+@isTest
+public class TestStair {
+	/**
+     * checks you can create a snake
+     */
+    @isTest
+    static void canCreateStair() {
+        Integer start = 3;
+        Integer finish = 9;
+        Stair stair = new Stair(start, finish);
+        Boolean properlyCreated = stair.start == start && stair.finish == finish;
+        system.assert(properlyCreated, 'Attributes were not properly set');
+    }
+    
+    /**
+     * checks you cant create a stair with its start outside of the board
+     * start must be greater than 0
+     */
+    @isTest
+    static void startInTheBoard() {
+        Boolean exceptionOccured = false;
+        try {
+            Stair stair = new Stair(-1, 4);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a stair with its start position lower than 1');
+    }
+    
+    /**
+     * checks you cant create a stair with its end outside of the board
+     * finish must be grater than 0
+     */
+    @isTest
+    static void endInTheBoard() {
+        Boolean exceptionOccured = false;
+        try {
+            Stair stair = new Stair(3, 0);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a stair with its start position lower than 1');
+    }
+    
+    /**
+     * checks you cant create a stair with its end outside of the board
+     * finish must be grater than 0
+     */
+    @isTest
+    static void startLowerThanFinish() {
+        Boolean exceptionOccured = false;
+        try {
+            Stair stair = new Stair(3, 1);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a stair with its start position higher than finish position');
+    }
+}

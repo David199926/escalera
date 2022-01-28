@@ -1,0 +1,70 @@
+public class Game {
+    
+    private static Board board;
+    private static List<Player> players;
+    
+    public static void main(Integer rows, Integer cols, Integer numberOfPlayers) {
+        init(rows, cols, numberOfPlayers);
+        gameLoop();
+    }
+    
+    public static List<Player> generatePlayers(Integer numberOfPlayers, Integer maxPosition) {
+        if (numberOfPlayers < 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('El número de jugadores debe ser un número positivo');
+            throw e;
+        }
+        List<Player> players = new List<Player>();
+        for (Integer i = 0; i < numberOfPlayers; i++) {
+            players.add(new Player(maxPosition, 'Player ' + (i + 1)));
+        }
+        return players;
+    }
+    
+    public static Board generateBoard(Integer rows, Integer cols) {
+        // validations
+        if (rows < 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('El número de filas debe ser un número positivo');
+            throw e;
+        }
+        if (cols < 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('El número de columnas debe ser un número positivo');
+            throw e;
+        }
+        
+        Board board = new Board(rows * cols);
+        system.debug('Se ha creado un tablero de ' + rows + ' filas y ' + cols + ' columnas');
+    	// putting snakes
+    	board.putSnake(new Snake(24, 16));
+        board.putSnake(new Snake(22, 20));
+        board.putSnake(new Snake(19, 8));
+        board.putSnake(new Snake(14, 4));
+    	// putting stairs
+    	board.putStair(new Stair(10, 12));
+        board.putStair(new Stair(3, 11));
+        board.putStair(new Stair(9, 18));
+        board.putStair(new Stair(6, 17));
+        return board;
+    }
+    
+    public static void init(Integer rows, Integer cols, Integer numberOfPlayers) {
+        system.debug('Bienvenido al juego de la escalera');
+        // board config
+        board = generateBoard(rows, cols);
+        players = generatePlayers(numberOfPlayers, rows * cols);
+        system.debug('vamos a jugar!!');
+        system.debug('***************************************************');
+    }
+    
+    public static void gameLoop() {
+        Boolean isOver = false;
+        do {
+            for (Player player : players) {
+                isOver = board.playTurn(player);
+                system.debug('----------------------------------');
+            }
+        } while(!isOver);
+    }
+}

@@ -1,0 +1,32 @@
+public class Player {
+	public Integer position;
+    public Integer maxPosition;
+    public String name;
+    
+    public Player(Integer maxPosition, String name) {
+        this.maxPosition = maxPosition;
+        this.position = 0;
+        this.name = name;
+    }
+    
+    public void move(Integer steps){
+        this.position += steps;
+        system.debug('Posición actual ' + this.position);
+    }
+    
+    public void moveTo(Integer position) {
+        if (position <= 0) {
+            CalloutException e = new CalloutException();
+            e.setMessage('La posición debe ser positiva');
+            throw e;
+        }
+        if (position <= maxPosition) {
+            this.position = position;
+        	system.debug('Posición actual ' + this.position);
+        } else {
+            CalloutException e = new CalloutException();
+            e.setMessage('La posición debe ser menor o igual a ' + this.maxPosition);
+            throw e;
+        }
+    }
+}

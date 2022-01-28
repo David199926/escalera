@@ -1,0 +1,163 @@
+@isTest
+public class TestBoard {
+    /**
+     * checks you can create an standard size board
+     */
+    @isTest
+    static void canCreateStandardBoard() {
+        Board board = new Board();
+        Boolean boxExists = board.boxes != null;
+        Boolean diceExists = board.dice != null;
+        Boolean snakesExists = board.snakes != null;
+        Boolean stairsExists = board.stairs != null;
+        
+        system.assert(boxExists, 'Board boxes was not properly set');
+        system.assert(diceExists, 'Board dices was not properly set');
+        system.assert(snakesExists, 'Board snakes was not properly set');
+        system.assert(stairsExists, 'Board stairs was not properly set');
+    }
+    
+	/**
+     * checks you can create a board with custom size
+     */
+    @isTest
+    static void canCreateCustomBoard() {
+        Integer rows = 5;
+        Integer cols = 5;
+        Board board = new Board(rows * cols);
+        system.assert(board.boxes == (rows * cols), 'Size was not properly set');
+    }
+    
+    /**
+     * you can put a snake
+     */
+    @isTest
+    static void canPutSnake() {
+        Snake snake = new Snake(9,3);
+        Board board = new Board();
+        board.putSnake(snake);
+        system.assert(board.snakes.contains(snake), 'Board does not contain the snake');
+    }
+    
+    /**
+     * you cant put a snake outside the board
+     * head position must be lower than board boxes
+     */
+    @isTest
+    static void putSnakeInsideBoard() {
+        Snake snake = new Snake(26,3);
+        Board board = new Board(25);
+        
+        Boolean exceptionOccured = false;
+        try {
+            board.putSnake(snake);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to put a snake outside the board');   
+	}
+    
+    /**
+     * you can put a stair
+     */
+    @isTest
+    static void canPutStair() {
+        Stair stair = new Stair(3,9);
+        Board board = new Board();
+        board.putStair(stair);
+        system.assert(board.stairs.contains(stair), 'Board does not contain the stair');
+    }
+    
+    /**
+     * you cant put a stair outside the board
+     * finish position must be lower than board boxes
+     */
+    @isTest
+    static void putStairInsideBoard() {
+        Stair stair = new Stair(20,28);
+        Board board = new Board(25);
+        
+        Boolean exceptionOccured = false;
+        try {
+            board.putStair(stair);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to put a stair outside the board');   
+	}
+    
+    /**
+     * If you fall in a snake head, you shoud go through it from head to tail
+     */
+    @isTest
+    static void snakesWork() {
+        Board board = new Board(25);
+        Snake snake = new Snake(20, 1);
+        board.putSnake(snake);
+        Player player = new Player(25, 'Robert');
+        player.moveTo(20);
+        board.snakeValidation(player);
+        
+        Boolean fellInSnake = player.position == snake.tail;
+        system.assert(fellInSnake, 'Player did not fall through snake');
+    }
+    
+    /**
+     * If you fall in a stair, you shoud go through it from start to finish
+     */
+    @isTest
+    static void stairWork() {
+        Board board = new Board(25);
+        Stair stair = new Stair(1,20);
+        board.putStair(stair);
+        Player player = new Player(25, 'Robert');
+        player.moveTo(1);
+        board.stairValidation(player);
+        
+        Boolean fellInStair = player.position == stair.finish;
+        system.assert(fellInStair, 'Player did not ascend through stair');
+    }
+    
+    /**
+     * If you fall in last board box, you win
+     */
+    @isTest
+    static void gameEnds() {
+        Board board = new Board(25);
+        Player player = new Player(25, 'Robert');
+        player.moveTo(25);
+        Boolean didWin = board.validations(player);
+        
+        system.assert(didWin, 'Player did not win when fell in final boards position');
+    }
+    
+    /**
+     * Games turns work
+     * Player roll the dice and then moves
+     */
+    @isTest
+    static void turnsWork() {
+        Board board = new Board(25);
+        Player player = new Player(25, 'Robert');
+        board.playTurn(player);
+        Boolean played = player.position > 0;
+        
+        system.assert(played, 'Player did not moves when rolled the dice');
+    }
+    
+    /**
+     * If player gets a dice number which is grater than the number of position needed to win
+     * player shoud move back the diference
+     */
+    @isTest
+    static void playerAlmostWin() {
+        Board board = new Board(25);
+        Player player = new Player(board.boxes, 'Robert');
+        player.position = board.boxes;
+        
+        board.playTurn(player);
+        Boolean wentBack = player.position < board.boxes; 
+        
+        system.assert(wentBack, 'Player did not move back when exceed the max board position');
+    }
+}

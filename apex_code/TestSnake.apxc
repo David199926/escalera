@@ -1,0 +1,60 @@
+@isTest
+public class TestSnake {
+    
+    /**
+     * checks you cant create a snake
+     */
+    @isTest
+    static void canCreateSnake() {
+        Integer head = 5;
+        Integer tail = 1;
+        Snake snake = new Snake(head, tail);
+        Boolean properlyCreated = snake.head == head && snake.tail == tail;
+        system.assert(properlyCreated, 'Attributes were not properly set');
+    }
+    
+    /**
+     * checks you cant create a snake with its tail outside of the board
+     * tail must be grater than 0
+     */
+    @isTest
+    static void tailInTheBoard() {
+        Boolean exceptionOccured = false;
+        try {
+            Snake snake = new Snake(3, -1);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a snake with its tail position lower than 1');
+    }
+    
+    /**
+     * checks you cant create a snake with its head outside of the board
+     * head must be grater than 0
+     */
+    @isTest
+    static void headInTheBoard() {
+        Boolean exceptionOccured = false;
+        try {
+            Snake snake = new Snake(-3, 3);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a snake with its head position lower than 1');
+    }
+    
+    /**
+     * checks you cant create a snake with its head in a lower position than its tail
+     * head must be greater than tail
+     */
+    @isTest
+    static void headHigherThanTail() {
+        Boolean exceptionOccured = false;
+        try {
+            Snake snake = new Snake(2, 3);
+        } catch(Exception e) {
+            exceptionOccured = true;
+        }
+        system.assert(exceptionOccured, 'Should not be able to create a snake with its head in a lower position than its tail');
+    }
+}

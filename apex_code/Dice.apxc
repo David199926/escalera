@@ -1,0 +1,7 @@
+public class Dice {
+    public Integer roll() {
+        Integer result = (Integer) Math.ceil(1 + Math.random() * 5);
+        system.debug('Dado arroja ' + result);
+        return result;
+    }
+}
