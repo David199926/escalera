@@ -1,5 +1,6 @@
 import * as readline from 'node:readline/promises';
 import Board from './Board.js';
+import Player from './Player.js';
 import Snake from './Snake.js';
 import Stair from './Stair.js';
 
@@ -10,7 +11,13 @@ const rl = readline.createInterface({
 });
 
 var board;
+var players = [];
 
+/**
+ * prompt function that handles "q" key exit
+ * @param {string} message 
+ * @returns 
+ */
 async function prompt(message) {
     const input = await rl.question(message);
     if (input === "q") {
@@ -20,6 +27,9 @@ async function prompt(message) {
     return input;
 }
 
+/**
+ * Initial instructions
+ */
 async function gameInstructions() {
     await prompt("Bienvenido al juego de la escalera! (Presiona cualquier tecla >)");
     await prompt("Es muy sencillo jugar, lo único que tienes que hacer es tirar el dado y moverte por el tablero (>)");
@@ -33,7 +43,7 @@ async function gameInstructions() {
 }
 
 /**
- * Ask the user for boards dimensions
+ * Asks the user for boards dimensions
  * and handles dimensions validation (number >= 0)
  * @returns {[rows: number, cols: number]} dimensions
  */
@@ -44,7 +54,7 @@ async function setBoardDimensions() {
     var colsValid = true;
     // rows
     do {
-        var rows = Number(await prompt("Ingresa el número de filas del tablero... "))
+        rows = Number(await prompt("Ingresa el número de filas del tablero... "))
         if (rows < 0) {
             console.log("Debe ser un número positivo, intenta de nuevo");
             rowsValid = false;
@@ -60,7 +70,7 @@ async function setBoardDimensions() {
     } while (!rowsValid);
     // columns
     do {
-        var cols = Number(await prompt("Ingresa el número de columnas del tablero... "))
+        cols = Number(await prompt("Ingresa el número de columnas del tablero... "))
         if (cols < 0) {
             console.log("Debe ser un número positivo, intenta de nuevo");
             colsValid = false;
@@ -79,6 +89,33 @@ async function setBoardDimensions() {
 }
 
 /**
+ * Creates the number of players indicated by the user
+ * @param {number} maxPosition mac position a player could be placed in
+ */
+async function setPlayers(maxPosition) {
+    var numberOfPlayers = 0;
+    var numberPlayersValid = true;
+    do {
+        numberOfPlayers = Number(await prompt("Ingresa el número de jugadores... "))
+        if (numberOfPlayers < 0) {
+            console.log("Debe ser un número positivo, intenta de nuevo");
+            numberPlayersValid = false;
+            continue;
+        }
+        if (isNaN(numberOfPlayers)) {
+            console.log("Debe ser un número, intenta de nuevo");
+            numberPlayersValid = false;
+            continue;
+        }
+        numberPlayersValid = true;
+    } while (!numberPlayersValid);
+
+    for (let i = 0; i < numberOfPlayers; i++) {
+        players.push(new Player(maxPosition, `Player ${i + 1}`));
+    }
+}
+
+/**
  * Configures the board
  * ask the user for board dimensions
  * puts snakes and stairs in the board
@@ -86,8 +123,11 @@ async function setBoardDimensions() {
 async function boardConfig() {
     // board configuration
     const [rows, cols] = await setBoardDimensions();
-    board = new Board(rows * cols);
-    
+    // define number of players
+    const numberOfPlayers = await setPlayers(rows * cols);
+
+    board = new Board(rows * cols, numberOfPlayers);
+
     // putting snakes
     board.putSnake(new Snake(24, 16));
     board.putSnake(new Snake(22, 20));
@@ -113,17 +153,17 @@ async function init() {
  * Game loop
  */
 async function loop() {
-
     while (true) {
-        await prompt("Tirar el dado? (>)");
-
-        const isOver = board.playTurn();
-        if (isOver) {
-            console.log("Gracias por jugar");
-            break;
+        for (const player of players) {
+            await prompt(`${player.name} tira los dados (>)`);
+            const isOver = board.playTurn(player);
+            if (isOver) {
+                console.log("Gracias por jugar");
+                rl.close();
+                process.exit();
+            }
         }
     }
-    rl.close()
 }
 
 await init();

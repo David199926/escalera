@@ -1,12 +1,11 @@
 import Dice from './Dice.js';
-import Player from './Player.js';
 
 export default class Board {
 
     constructor(boxes = 25) {
         this.boxes = boxes;
-        this.player = new Player(boxes);
         this.dice = new Dice();
+
         // stairs and snakes
         this.snakes = [];
         this.stairs = [];
@@ -14,56 +13,64 @@ export default class Board {
 
     putSnake(snake) {
         if (snake.head > this.boxes) {
-            throw new Error(`La serpiente debe iniciar máximo en la casilla ${this.boxes}`)
+            throw new Error(`La serpiente debe iniciar máximo en la casilla ${this.boxes}`);
         }
         this.snakes.push(snake);
     }
 
     putStair(stair) {
         if (stair.end > this.boxes) {
-            throw new Error(`La escalera debe terminar máximo en la casilla ${this.boxes}`)
+            throw new Error(`La escalera debe terminar máximo en la casilla ${this.boxes}`);
         }
         this.stairs.push(stair);
     }
 
-    playTurn() {
+    playTurn(player) {
         let steps = this.dice.roll();
-        this.player.move(steps);
 
-        return this.validations();
+        let rest = this.boxes - player.position;
+        if (steps > rest) {
+            let back = steps - rest;
+            console.log(`${player.name} se ha pasado de la meta, retrocederá ${back} casillas`);
+            player.move(rest - back);
+        } else {
+            player.move(steps);
+        }
+
+        return this.validations(player);
     }
 
-    validations() {
+    validations(player) {
         // stair validation
-        this.stairValidation();
+        this.stairValidation(player);
         // snake validation
-        this.snakeValidation();
+        this.snakeValidation(player);
 
         // wining validation
-        if (this.player.position >= this.boxes) {
-            console.log(`Llegaste a la casilla ${this.boxes}, ganaste!!`)
+        if (player.position >= this.boxes) {
+            console.log(`${player.name} llegó a la casilla ${this.boxes}, ${player.name} ha ganado!!`);
             return true;
         }
         return false;
     }
 
-    stairValidation() {
+    stairValidation(player) {
         this.stairs.forEach(stair => {
-            if (stair.start === this.player.position) {
-                console.log(`Caiste en una escalera que te lleva a la casilla ${stair.end}`)
-                this.player.moveTo(stair.end);
-                this.validations();
+            if (stair.start === player.position) {
+                console.log(`${player.name} cayó en una escalera que le lleva a la casilla ${stair.end}`);
+                player.moveTo(stair.end);
+                this.validations(player);
                 return;
             }
         })
     }
 
-    snakeValidation() {
+    snakeValidation(player) {
         this.snakes.forEach(snake => {
-            if (snake.head === this.player.position) {
-                console.log(`Caiste en una serpiente que te lleva a la casilla ${snake.tail} :(`)
-                this.player.moveTo(snake.tail)
-                this.validations();
+            if (snake.head === player.position) {
+                console.log(`${player.name} cayó en una serpiente que le lleva a la casilla ${snake.tail} :(`);
+                player.moveTo(snake.tail)
+                this.validations(player);
                 return;
             }
         })
