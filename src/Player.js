@@ -24,8 +24,12 @@ export default class Player {
      * @param {number} position 
      */
     moveTo(position) {
-        this.position = position;
-        console.log("Posicion actual " + this.position)
+        if (position < this.maxPosition) {
+            this.position = position;
+            console.log("Posicion actual " + this.position)
+        } else {
+            console.log("La posición tiene que ser menor o igual a " + this.maxPosition)
+        }
     }
 
 }
