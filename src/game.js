@@ -1,5 +1,7 @@
 import * as readline from 'node:readline/promises';
 import Board from './Board.js';
+import Snake from './Snake.js';
+import Stair from './Stair.js';
 
 // prompt input
 const rl = readline.createInterface({
@@ -8,6 +10,17 @@ const rl = readline.createInterface({
 });
 
 const board = new Board();
+// putting snakes
+board.putSnake(new Snake(24, 16));
+board.putSnake(new Snake(22, 20));
+board.putSnake(new Snake(19, 8));
+board.putSnake(new Snake(14, 4));
+// putting stairs
+board.putStair(new Stair(10, 12));
+board.putStair(new Stair(3, 11));
+board.putStair(new Stair(9, 18));
+board.putStair(new Stair(6, 17));
+
 
 async function prompt(message) {
     const input = await rl.question(message);
