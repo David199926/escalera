@@ -1,9 +1,9 @@
 export default class Snake {
     constructor(head, tail) {
-        if ( tail < 0 ) {
+        if ( tail <= 0 ) {
             throw new Error("La serpiente debe terminar en una casilla con número positivo");
         }
-        if ( head < 0 ) {
+        if ( head <= 0 ) {
             throw new Error("La serpiente debe iniciar en una casilla con número positivo");
         }
         if ( tail >= head ) {

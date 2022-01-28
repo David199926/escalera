@@ -1,9 +1,9 @@
 export default class Stair {
     constructor(start, end) {
-        if ( start < 0 ) {
+        if ( start <= 0 ) {
             throw new Error("La escalera debe iniciar en una casilla con número positivo");
         }
-        if ( end < 0 ) {
+        if ( end <= 0 ) {
             throw new Error("La escalera debe terminar en una casilla con número positivo");
         }
         if ( end <= start ) {
