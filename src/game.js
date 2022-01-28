@@ -9,18 +9,7 @@ const rl = readline.createInterface({
     output: process.stdout,
 });
 
-const board = new Board();
-// putting snakes
-board.putSnake(new Snake(24, 16));
-board.putSnake(new Snake(22, 20));
-board.putSnake(new Snake(19, 8));
-board.putSnake(new Snake(14, 4));
-// putting stairs
-board.putStair(new Stair(10, 12));
-board.putStair(new Stair(3, 11));
-board.putStair(new Stair(9, 18));
-board.putStair(new Stair(6, 17));
-
+var board;
 
 async function prompt(message) {
     const input = await rl.question(message);
@@ -28,6 +17,7 @@ async function prompt(message) {
         console.log("Gracias por jugar");
         process.exit();
     }
+    return input;
 }
 
 async function gameInstructions() {
@@ -39,8 +29,75 @@ async function gameInstructions() {
     await prompt("Si caes en la cabeza de una serpiente, bajas hasta su cola :// (>)");
     await prompt("Si quieres retirarte del juego, presiona la letra \"q\"");
     await prompt("Eso es todo lo que necesitas saber, ahora, a jugar!");
-    //rl.close()
     console.log("************************************************************************")
+}
+
+/**
+ * Ask the user for boards dimensions
+ * and handles dimensions validation (number >= 0)
+ * @returns {[rows: number, cols: number]} dimensions
+ */
+async function setBoardDimensions() {
+    var rows = 0;
+    var cols = 0;
+    var rowsValid = true;
+    var colsValid = true;
+    // rows
+    do {
+        var rows = Number(await prompt("Ingresa el número de filas del tablero... "))
+        if (rows < 0) {
+            console.log("Debe ser un número positivo, intenta de nuevo");
+            rowsValid = false;
+            continue;
+        }
+        if (isNaN(rows)) {
+            console.log("Debe ser un número, intenta de nuevo");
+            rowsValid = false;
+            continue;
+        }
+        rowsValid = true;
+
+    } while (!rowsValid);
+    // columns
+    do {
+        var cols = Number(await prompt("Ingresa el número de columnas del tablero... "))
+        if (cols < 0) {
+            console.log("Debe ser un número positivo, intenta de nuevo");
+            colsValid = false;
+            continue;
+        }
+        if (isNaN(cols)) {
+            console.log("Debe ser un número, intenta de nuevo");
+            colsValid = false;
+            continue;
+        }
+        colsValid = true;
+
+    } while (!colsValid);
+
+    return [rows, cols];
+}
+
+/**
+ * Configures the board
+ * ask the user for board dimensions
+ * puts snakes and stairs in the board
+ */
+async function boardConfig() {
+    // board configuration
+    const [rows, cols] = await setBoardDimensions();
+    board = new Board(rows * cols);
+    
+    // putting snakes
+    board.putSnake(new Snake(24, 16));
+    board.putSnake(new Snake(22, 20));
+    board.putSnake(new Snake(19, 8));
+    board.putSnake(new Snake(14, 4));
+    // putting stairs
+    board.putStair(new Stair(10, 12));
+    board.putStair(new Stair(3, 11));
+    board.putStair(new Stair(9, 18));
+    board.putStair(new Stair(6, 17));
 }
 
 /**
@@ -48,7 +105,8 @@ async function gameInstructions() {
  */
 async function init() {
     // first, instructions
-    await gameInstructions();
+    //await gameInstructions();
+    await boardConfig();
 }
 
 /**

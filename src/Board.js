@@ -1,7 +1,5 @@
 import Dice from './Dice.js';
 import Player from './Player.js';
-import Snake from './Snake.js';
-import Stair from './Stair.js';
 
 export default class Board {
 
@@ -15,10 +13,16 @@ export default class Board {
     }
 
     putSnake(snake) {
+        if (snake.head > this.boxes) {
+            throw new Error(`La serpiente debe iniciar máximo en la casilla ${this.boxes}`)
+        }
         this.snakes.push(snake);
     }
 
     putStair(stair) {
+        if (stair.end > this.boxes) {
+            throw new Error(`La escalera debe terminar máximo en la casilla ${this.boxes}`)
+        }
         this.stairs.push(stair);
     }
 
